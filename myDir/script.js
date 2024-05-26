@@ -1,12 +1,13 @@
 
 
-function*  taskGenerator(set_title, set_description, set_due_date, set_notes, set_checklist) {
+function*  taskGenerator(set_title, set_description, set_due_date, set_notes, set_checklist, set_status) {
     return{
     title: set_title,
     description: set_description,
     dueDate: set_due_date,
     notes: set_notes,
-    checklist: set_checklist
+    checklist: set_checklist,
+    status: set_status
     }
 }
 function viewAllProjects(){
@@ -24,6 +25,9 @@ function expandTask(){
 function deleteTask(){
     do null;
     while(false);
+}
+function markComplete(task){
+    task.status = complete;
 }
 
 var tasks=[
@@ -51,6 +55,6 @@ var tasks=[
 
 ]
 function main(){
-
+    
 }
 document.onload(main);

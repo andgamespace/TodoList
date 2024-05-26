@@ -32,7 +32,7 @@ var tasks=[
     description:"",
     dueDate:"",
     notes:"",
-    checklist:""
+    checklist:"" 
 },
 {
     title:"",
