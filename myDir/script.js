@@ -19,7 +19,7 @@ function*  taskGenerator(set_title, set_description, set_due_date, set_notes, se
         if(set_description == 0){
             object.description = "_"
         } else{
-            object.descritpion = set_description;
+            object.description = set_description;
         }
      
         if(set_due_date == 0){
@@ -49,12 +49,13 @@ function* projectGenerator(set_title, set_description, set_due_date, set_notes, 
         description: set_description,
         dueDate: set_due_date,
         notes: set_notes,
+        tasks: []
     }
 
     tasks.forEach(() => {
         const taskDetails = taskString.split(','); // Splitting each task string by commas to get task properties
         const task = taskGenerator(taskDetails, 0,0,0,0); // Creating a new Task by spreading the array into the constructor
-        project.addTask(task);
+        myProject.tasks.push(task);
     });
 
 
