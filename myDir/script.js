@@ -1,86 +1,71 @@
- task = {
-    set_title = "_",
-    description: "_",
-    dueDate: "_",
-    notes: "_",
-    checklist: "_"
+// Import necessary functions
+import { taskGenerator } from './taskFunctions';
+
+// Function to initialize the application
+function main() {
+    const newTaskButton = document.getElementById('new_task_button');
+    newTaskButton.addEventListener('click', () => addNewTask());
 }
 
-function*  taskGenerator(set_title, set_description, set_due_date, set_notes, set_checklist) {
-        
-        object = {
-            title: set_title,
-            description: set_description,
-            dueDate: set_due_date,
-            notes: set_notes,
-            checklist: set_checklist
-            }
-            
-        if(set_description == 0){
-            object.description = "_"
-        } else{
-            object.description = set_description;
-        }
-     
-        if(set_due_date == 0){
-            object.dueDate = "_";
-        } else{
-            object.dueDate = set_due_date;
-        }
+// Function to add a new task
+function addNewTask() {
+    const title = prompt("Enter task title:");
+    const description = prompt("Enter task description:", "_");
+    const dueDate = prompt("Enter task due date:", "_");
+    const notes = prompt("Enter task notes:", "_");
+    const checklist = prompt("Enter task checklist:", "_");
 
-        if(set_notes == 0){
-            object.notes = "_";
-        }else{
-            object.notes = set_notes;
-        }
+    const taskGen = taskGenerator(title, description, dueDate, notes, checklist);
+    const task = taskGen.next().value;
+    renderTask(task);
+}
 
-        if(set_checklist == 0){
-            object.checklist = "_";
-        }else{
-            object.checklist = set_checklist;
+// Function to render a task
+function renderTask(task) {
+    const tasksDiv = document.getElementById('tasks');
+
+    const taskDiv = document.createElement('div');
+    taskDiv.className = 'task';
+    taskDiv.name = task.title;
+    taskDiv.task = task;
+
+    const taskTitle = document.createElement('h3');
+    taskTitle.innerText = task.title;
+    taskDiv.appendChild(taskTitle);
+
+    taskDiv.addEventListener('click', () => expandTask(task));
+    tasksDiv.appendChild(taskDiv);
+}
+
+// Function to expand a task
+function expandTask(myTask) {
+    const taskMoreInfoDiv = document.createElement("div");
+    const descriptionP = document.createElement("p");
+    descriptionP.innerText = myTask.description;
+    const dueDateP = document.createElement("p");
+    dueDateP.innerText = myTask.dueDate;
+    const notesP = document.createElement('p');
+    notesP.innerText = myTask.notes;
+    const checklistP = document.createElement('p');
+    checklistP.innerText = myTask.checklist;
+
+    taskMoreInfoDiv.appendChild(descriptionP);
+    taskMoreInfoDiv.appendChild(dueDateP);
+    taskMoreInfoDiv.appendChild(notesP);
+    taskMoreInfoDiv.appendChild(checklistP);
+    document.getElementById('tasks').appendChild(taskMoreInfoDiv);
+}
+
+// Function to delete a task
+function deleteTask(myTask) {
+    const tasksDiv = document.getElementById('tasks');
+    const divs = tasksDiv.getElementsByClassName('task');
+    for (let i = 0; i < divs.length; i++) {
+        if (divs[i].name === myTask.title) {
+            tasksDiv.removeChild(divs[i]);
+            break;
         }
-        
-        return object;
     }
 }
-function* projectGenerator(set_title, set_description, set_due_date, set_notes, set_tasks){
-    myProject = {
-        title: set_title,
-        description: set_description,
-        dueDate: set_due_date,
-        notes: set_notes,
-        tasks: []
-    }
 
-    tasks.forEach(() => {
-        const taskDetails = taskString.split(','); // Splitting each task string by commas to get task properties
-        const task = taskGenerator(taskDetails, 0,0,0,0); // Creating a new Task by spreading the array into the constructor
-        myProject.tasks.push(task);
-    });
-
-
-}
-
-function viewAllProjects(){
-    do null;
-    while(false);
-}
-function viewAllTasksInProject(){
-    do null;
-    while(false);
-}
-function expandTask(){
-    do null;
-    while(false);
-}
-function deleteTask(){
-    do null;
-    while(false);
-}
-
-
-
-function main(){
-
-}
-document.onload(main);
+document.onload = main;

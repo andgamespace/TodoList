@@ -1,77 +1,131 @@
-export default task = {
-    set_title: "_",
-    description: "_",
-    dueDate: "_",
-    notes: "_",
-    checklist: "_"
-}
-const contentDiv = docuemnt.getElementById('content');
-const tasksDiv = document.getElementById('tasks');
-
-export function*  taskGenerator(set_title, set_description, set_due_date, set_notes, set_checklist) {
-        
-    object = {
-        title: set_title,
-        description: set_description,
-        dueDate: set_due_date,
-        notes: set_notes,
-        checklist: set_checklist
-        }
-        
-    if(set_description == 0){
-        object.description = "_"
-    } else{
-        object.description = set_description;
-    }
- 
-    if(set_due_date == 0){
-        object.dueDate = "_";
-    } else{
-        object.dueDate = set_due_date;
-    }
-
-    if(set_notes == 0){
-        object.notes = "_";
-    }else{
-        object.notes = set_notes;
-    }
-
-    if(set_checklist == 0){
-        object.checklist = "_";
-    }else{
-        object.checklist = set_checklist;
-    }
-    
-    return object;
-}
-export function expandTask(myTask, taskDiv){
-    const myTaskName = myTask.title;
-    let divs = tasksDiv.getElementsByTagName('div');
-    let divIndex = 0;
-    for(let i = 0; i < tasksDiv.getElementsByTagName('div').length; i++){
-        if(divs[i].name == myTask.name){
-            divIndex = i;
-            break;
-        }
-    }   
-    const taskMoreInfoDiv = document.createElement("div")
-    tasksDiv.appendChild(taskMoreInfoDiv);
+// Task generator function
+function* taskGenerator(set_title, set_description = "_", set_due_date = "_", set_notes = "_", set_checklist = "_") {
+    const object = {
+      title: set_title,
+      description: set_description !== null ? set_description : "_",
+      dueDate: set_due_date !== null ? set_due_date : "_",
+      notes: set_notes !== null ? set_notes : "_",
+      checklist: set_checklist !== null ? set_checklist : "_",
+    };
+    yield object;
+  }
+  
+  // Function to render a task
+  function renderTask(task) {
+    const taskDiv = document.createElement('div');
+    taskDiv.className = 'task';
+    taskDiv.name = task.title;
+    taskDiv.task = task;
+  
+    const taskTitle = document.createElement('h3');
+    taskTitle.innerText = task.title;
+    taskDiv.appendChild(taskTitle);
+  
+    taskDiv.addEventListener('click', () => expandTask(task));
+    tasksDiv.appendChild(taskDiv);
+  }
+  
+  // Function to expand a task
+  function expandTask(myTask) {
+    const taskMoreInfoDiv = document.createElement("div");
     const descriptionP = document.createElement("p");
-    descriptionP.innerText = (divs[divIndex].task.description);
+    descriptionP.innerText = myTask.description;
     const dueDateP = document.createElement("p");
-    dueDateP.innerText = (divs[divIndex].task.dueDate);
-    const notesP = document.createElement('div');
-    dueDateP.innerText = ('div');
+    dueDateP.innerText = myTask.dueDate;
+    const notesP = document.createElement('p');
+    notesP.innerText = myTask.notes;
+    const checklistP = document.createElement('p');
+    checklistP.innerText = myTask.checklist;
+  
     taskMoreInfoDiv.appendChild(descriptionP);
     taskMoreInfoDiv.appendChild(dueDateP);
-}   
-export function deleteTask(myTask){
-    for(let i = 0; i < tasksDiv.getElementsByTagName('div').length; i++){
-        if(divs[i].name == myTask.name){
-            divIndex = i;
+    taskMoreInfoDiv.appendChild(notesP);
+    taskMoreInfoDiv.appendChild(checklistP);
+    tasksDiv.appendChild(taskMoreInfoDiv);
+  }
+  
+  // Function to delete a task
+  function deleteTask(myTask) {
+    const divs = tasksDiv.getElementsByClassName('task');
+    for (let i = 0; i < divs.length; i++) {
+      if (divs[i].name === myTask.title) {
+        tasksDiv.removeChild(divs[i]);
+        break;
+      }
+    }
+  }
+  
+  // Example usage
+  const tasksDiv = document.getElementById('tasks');
+  
+  // Create and render tasks using generator
+  const task1Gen = taskGenerator('Task 1', 'Description 1', '2024-06-01', 'Notes 1', 'Checklist 1');
+  const task2Gen = taskGenerator('Task 2', 'Description 2', '2024-06-02', 'Notes 2', 'Checklist 2');
+  
+  const task1 = task1Gen.next().value;
+  const task2 = task2Gen.next().value;
+  
+  renderTask(task1);
+  renderTask(task2);
+  
+  // Delete a task
+  deleteTask(task1);
+  function addNewTask() {
+    const title = prompt("Enter task title:");
+    const description = prompt("Enter task description:", "_");
+    const dueDate = prompt("Enter task due date:", "_");
+    const notes = prompt("Enter task notes:", "_");
+    const checklist = prompt("Enter task checklist:", "_");
+
+    const taskGen = taskGenerator(title, description, dueDate, notes, checklist);
+    const task = taskGen.next().value;
+    renderTask(task);
+}
+
+// Function to render a task
+function renderTask(task) {
+    const tasksDiv = document.getElementById('tasks');
+
+    const taskDiv = document.createElement('div');
+    taskDiv.className = 'task';
+    taskDiv.name = task.title;
+    taskDiv.task = task;
+
+    const taskTitle = document.createElement('h3');
+    taskTitle.innerText = task.title;
+    taskDiv.appendChild(taskTitle);
+
+    taskDiv.addEventListener('click', () => expandTask(task));
+    tasksDiv.appendChild(taskDiv);
+}
+
+// Function to expand a task
+function expandTask(myTask) {
+    const taskMoreInfoDiv = document.createElement("div");
+    const descriptionP = document.createElement("p");
+    descriptionP.innerText = myTask.description;
+    const dueDateP = document.createElement("p");
+    dueDateP.innerText = myTask.dueDate;
+    const notesP = document.createElement('p');
+    notesP.innerText = myTask.notes;
+    const checklistP = document.createElement('p');
+    checklistP.innerText = myTask.checklist;
+
+    taskMoreInfoDiv.appendChild(descriptionP);
+    taskMoreInfoDiv.appendChild(dueDateP);
+    taskMoreInfoDiv.appendChild(notesP);
+    taskMoreInfoDiv.appendChild(checklistP);
+    document.getElementById('tasks').appendChild(taskMoreInfoDiv);
+}
+
+// Function to delete a task
+function deleteTask(myTask) {
+    const tasksDiv = document.getElementById('tasks');
+    const divs = tasksDiv.getElementsByClassName('task');
+    for (let i = 0; i < divs.length; i++) {
+        if (divs[i].name === myTask.title) {
+            tasksDiv.removeChild(divs[i]);
             break;
         }
-    }  
-    
-} 
-
+    }
+}

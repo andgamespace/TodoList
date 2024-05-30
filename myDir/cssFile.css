@@ -13,6 +13,7 @@
     width: 80%;
     height: 500px;
 }
+
 #taskUI {
     display: flex;
     flex-direction: column;
